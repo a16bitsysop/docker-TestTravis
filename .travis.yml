@@ -1,0 +1,33 @@
+os: linux
+dist: bionic
+language: minimal
+
+env:
+  - DOCKER_CLI_EXPERIMENTAL=enabled IMAGE_NAME=a16bitsysop/TravisTest APK=bash
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+
+before_script:
+  - VER=$(docker container run --rm alpine sh -c "apk update > /dev/null; apk info -s "$APK" | head -n1 | sed -r 's+$APK-(.*) install.*+\1+g';")
+  - VER="$VER"-alpine"$(docker container run --rm alpine cat /etc/alpine-release)"
+  - TAG="-t $IMAGE_NAME:$VER"
+  - |
+      MY_VER="$(wget -q https://registry.hub.docker.com/v1/repositories/$IMAGE_NAME/tags -O - | sed -e 's+.*\"name\": \"++g' -e 's+\"}]++')"
+      echo "Alpine Version $VER"
+      echo "Docker Version $MY_VER"
+      if [ -z $NOW ] && [ -n "$MY_VER" ] && [ "$MY_VER" = "$VER" ]; then travis_terminate 0; fi
+  - sudo apt-get install pass
+  - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
+  - chmod +x $(pwd)/docker-credential-pass
+  - |
+      echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nExpire-Date: 0\n%commit\n%echo done" > keygen.txt
+      gpg --batch --gen-key keygen.txt
+      pass init $(gpg --no-auto-check-trustdb --list-secret-keys | grep ^sec | cut -d/ -f2 | cut -d" " -f1)
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+  - docker buildx create --use
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+script:
+  - docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 $TAG -t "$IMAGE_NAME" --push .
