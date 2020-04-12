@@ -3,7 +3,7 @@ dist: bionic
 language: minimal
 
 env:
-  - DOCKER_CLI_EXPERIMENTAL=enabled IMAGE_NAME=a16bitsysop/TravisTest APK=bash
+  - DOCKER_CLI_EXPERIMENTAL=enabled IMAGE_NAME=a16bitsysop/travistest APK=bash
 
 addons:
   apt:
@@ -23,7 +23,7 @@ before_script:
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
   - chmod +x $(pwd)/docker-credential-pass
   - |
-      echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nExpire-Date: 0\n%commit\n%echo done" > keygen.txt
+      echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nExpire-Date: 0\nPassphrase: ''\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt
       pass init $(gpg --no-auto-check-trustdb --list-secret-keys | grep ^sec | cut -d/ -f2 | cut -d" " -f1)
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
