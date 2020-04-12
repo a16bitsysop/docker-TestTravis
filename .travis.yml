@@ -13,7 +13,6 @@ before_script:
       MY_VER="$(wget -q https://registry.hub.docker.com/v1/repositories/$IMAGE_NAME/tags -O - | sed -e 's+.*\"name\": \"++g' -e 's+\"}]++')"
       echo "Alpine Version $VER"
       echo "Docker Version $MY_VER"
-      if [ -z $NOW ] && [ -n "$MY_VER" ] && [ "$MY_VER" = "$VER" ]; then travis_terminate 0; fi
   - sudo apt-get install pass
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
   - chmod +x $(pwd)/docker-credential-pass && mv docker-credential-pass /usr/local/bin
