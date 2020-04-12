@@ -19,8 +19,10 @@ before_script:
   - |
       echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nExpire-Date: 0\nPassphrase: ''\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt
+      gpg --check-trustdb
       pass init $(gpg --no-auto-check-trustdb --list-secret-keys | grep ^sec | cut -d/ -f2 | cut -d" " -f1)
-      echo -e "{\"Username\":/"$DOCKER_USERNAME/",\"Secret\":\"$DOCKER_PASSWORD\"}" | docker-credential-pass store
+      echo -e "{\n  \"ServerURL\": \"https://index.docker.io/v1\", \n  \"Username\": \"$DOCKER_USERNAME\", \n  \"Secret\": \"$DOCKER_PASSWORD\"\n}" | docker-credential-pass store
+      echo -e '{\n\  "credsStore\":\"pass\"\n}' > .docker/config.jason
   - curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --use
