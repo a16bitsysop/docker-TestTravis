@@ -17,10 +17,10 @@ before_script:
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
   - chmod +x $(pwd)/docker-credential-pass && mkdir bin && mv docker-credential-pass bin/
   - |
-      echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nPassphrase: ''\nExpire-Date: 1\n%commit\n%echo done" > keygen.txt
+      echo -e "%echo Generating a basic OpenPGP key\n%transient-key\n%no-protection\nKey-Type: default\nSubkey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis Builder user\nName-Email: travis@example.com\nExpire-Date: 1\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt
       gpg --check-trustdb
-      pass init $(gpg --no-auto-check-trustdb --list-secret-keys | grep -A1 ^sec | tail -n1 | sed 's+^[[:space:]]*++')
+      pass init $(gpg --list-secret-keys | grep -A1 ^sec | tail -n1 | sed 's+^[[:space:]]*++')
       echo -e "{\n  \"ServerURL\": \"https://index.docker.io/v1\", \n  \"Username\": \"$DOCKER_USERNAME\", \n  \"Secret\": \"$DOCKER_PASSWORD\"\n}" | ./bin/docker-credential-pass store
       mkdir .docker
       echo -e '{\n\  "credsStore\":\"pass\"\n}' > .docker/config.jason
