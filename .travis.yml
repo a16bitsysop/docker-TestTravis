@@ -20,10 +20,11 @@ before_script:
       echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nExpire-Date: 0\nPassphrase: ''\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt
       pass init $(gpg --no-auto-check-trustdb --list-secret-keys | grep ^sec | cut -d/ -f2 | cut -d" " -f1)
+      echo -e "{\"Username\":/"$DOCKER_USERNAME/",\"Secret\":\"$DOCKER_PASSWORD\"} | docker-credential-pass store
   - curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --use
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker login 
 script:
   - docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 $TAG -t "$IMAGE_NAME" --push .
   - docker logout
