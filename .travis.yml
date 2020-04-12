@@ -17,7 +17,7 @@ before_script:
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
   - chmod +x $(pwd)/docker-credential-pass && mkdir bin && mv docker-credential-pass bin/
   - |
-      echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nExpire-Date: 0\nPassphrase: ''\n%commit\n%echo done" > keygen.txt
+      echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nPassphrase: ''\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt
       gpg --check-trustdb
       pass init $(gpg --no-auto-check-trustdb --list-secret-keys | grep -A1 ^sec | tail -n1 | sed 's+^[[:space:]]*++')
