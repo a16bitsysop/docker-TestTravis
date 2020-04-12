@@ -16,7 +16,7 @@ before_script:
       if [ -z $NOW ] && [ -n "$MY_VER" ] && [ "$MY_VER" = "$VER" ]; then travis_terminate 0; fi
   - sudo apt-get install pass
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
-  - chmod +x $(pwd)/docker-credential-pass
+  - chmod +x $(pwd)/docker-credential-pass && mv docker-credential-pass /usr/local/bin
   - |
       echo -e "%echo Generating a basic OpenPGP key\nKey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis autobuilder user\nName-Email: travis@example.com\nExpire-Date: 0\nPassphrase: ''\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt
@@ -27,3 +27,4 @@ before_script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 script:
   - docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 $TAG -t "$IMAGE_NAME" --push .
+  - docker logout
