@@ -3,7 +3,7 @@ dist: bionic
 language: minimal
 
 env:
-  - DOCKER_CLI_EXPERIMENTAL=enabled IMAGE_NAME=a16bitsysop/travistest APK=bash
+  - IMAGE_NAME=a16bitsysop/travistest APK=bash
 
 before_script:
   - VER=$(docker container run --rm alpine sh -c "apk update > /dev/null; apk info -s "$APK" | head -n1 | sed -r 's+$APK-(.*) install.*+\1+g';")
@@ -23,7 +23,7 @@ before_script:
       pass init $(gpg --list-secret-keys | grep -A1 ^sec | tail -n1 | sed 's+^[[:space:]]*++')
       #echo -e "{\n  \"ServerURL\": \"https://index.docker.io/v1\", \n  \"Username\": \"$DOCKER_USERNAME\", \n  \"Secret\": \"$DOCKER_PASSWORD\"\n}" | ./bin/docker-credential-pass store
       mkdir .docker
-      echo -e '{\n\  "credsStore\":\"pass\"\n}' > .docker/config.jason
+      echo -e '{\n  \"credsStore\" : \"pass\"\n  \"experimental\" : \"enabled\"\n}' > .docker/config.jason
   - curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --use
