@@ -21,13 +21,13 @@ before_script:
       gpg --batch --gen-key keygen.txt
       gpg --check-trustdb
       pass init $(gpg --list-secret-keys | grep -A1 ^sec | tail -n1 | sed 's+^[[:space:]]*++')
-      echo -e "{\n  \"ServerURL\": \"https://index.docker.io/v1\", \n  \"Username\": \"$DOCKER_USERNAME\", \n  \"Secret\": \"$DOCKER_PASSWORD\"\n}" | ./bin/docker-credential-pass store
+      #echo -e "{\n  \"ServerURL\": \"https://index.docker.io/v1\", \n  \"Username\": \"$DOCKER_USERNAME\", \n  \"Secret\": \"$DOCKER_PASSWORD\"\n}" | ./bin/docker-credential-pass store
       mkdir .docker
       echo -e '{\n\  "credsStore\":\"pass\"\n}' > .docker/config.jason
   - curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --use
-  - docker login -u $DOCKER_USERNAME
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 script:
   - docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 $TAG -t "$IMAGE_NAME" --push .
   - docker logout
