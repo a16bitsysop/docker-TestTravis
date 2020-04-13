@@ -14,10 +14,10 @@ before_script:
       echo "Alpine Version $VER"
       echo "Docker Version $MY_VER"
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo apt-get remove docker && sudo apt-get autoremove
+  - sudo apt autoremove
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-  - sudo apt-get update && sudo apt-get upgrade docker-ce
-  - sudo apt-get install pass
+  - sudo apt update && sudo apt upgrade docker-ce
+  - sudo apt install pass
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
   - chmod +x docker-credential-pass && mv docker-credential-pass ~/bin/
   - |
