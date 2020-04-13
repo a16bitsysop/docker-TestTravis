@@ -2,6 +2,15 @@ os: linux
 dist: bionic
 language: minimal
 
+addons:
+  apt:
+    sources:
+    - sourceline: 'deb https://download.docker.com/linux/ubuntu bionic stable'
+      key_url: 'https://download.docker.com/linux/ubuntu/gpg'
+    packages:
+    - docker-ce-cli
+    - pass
+
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash
 
@@ -15,11 +24,6 @@ before_install:
       echo "Docker Version $MY_VER"
 
 install:
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo apt autoremove -qq
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-  - sudo apt-get update -qq >/dev/null && sudo apt-get install -y -qq --no-install-recommends docker-ce-cli
-  - sudo apt install pass -qq
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
   - chmod +x docker-credential-pass && mv docker-credential-pass ~/bin/
   - |
