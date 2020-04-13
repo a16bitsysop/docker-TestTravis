@@ -13,7 +13,7 @@ before_install:
       echo "Docker Version $MY_VER"
 
 install:
-  - git clone --depth 3 https://github.com/a16bitsysop/travis-build-configs.git && mv travis-build-configs/*.sh ~/Bin/
+  - git clone --depth 3 https://github.com/a16bitsysop/travis-build-configs.git && mv travis-build-configs/*.sh ~/bin/
   - docker-pass.sh
 
 before_script:
