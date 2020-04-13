@@ -1,15 +1,4 @@
-os: linux
-dist: bionic
-language: minimal
-
-addons:
-  apt:
-    sources:
-    - sourceline: 'deb https://download.docker.com/linux/ubuntu bionic stable'
-      key_url: 'https://download.docker.com/linux/ubuntu/gpg'
-    packages:
-    - docker-ce-cli
-    - pass
+import: a16bitsysop/travis-build-configs:docker.yml
 
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash
