@@ -1,7 +1,7 @@
-import: a16bitsysop/travis-build-configs:docker.yml
-
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash
+
+import: a16bitsysop/travis-build-configs:docker.yml
 
 before_install:
   - VER=$(docker container run --rm alpine sh -c "apk update > /dev/null; apk info -s "$APK" | head -n1 | sed -r 's+$APK-(.*) install.*+\1+g';")
