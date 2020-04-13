@@ -16,3 +16,8 @@ install:
   - git clone --depth 3 https://github.com/a16bitsysop/travis-build-configs.git
   - sh travis-build-configs/docker-pass.sh
 
+before_script:
+  - sh travis-build-configs/docker-prep.sh
+
+script:
+  - sh travis-build-configs/docker-build.sh
