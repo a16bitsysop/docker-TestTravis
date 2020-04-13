@@ -18,6 +18,7 @@ install:
 
 before_script:
   - sh travis-build-configs/docker-prep.sh
+  - cat ~/.docker/config.json
 
 script:
   - sh travis-build-configs/docker-build.sh
