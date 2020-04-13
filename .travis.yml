@@ -20,7 +20,7 @@ before_script:
       echo -e "%echo Generating a basic OpenPGP key\n%transient-key\n%no-protection\nKey-Type: default\nSubkey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis Builder user\nName-Email: travis@example.com\nExpire-Date: 1\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt && gpg --check-trustdb
       pass init $(gpg --list-secret-keys | grep -A1 ^sec | tail -n1 | sed 's+^[[:space:]]*++')
-      mkdir .docker
+      ls -lah ~/ && mkdir ~/.docker
       echo -e '{\n  "credsStore": "pass",\n  "experimental": "enabled"\n}' > ~/.docker/config.json
       cat ~/.docker/config.json
   - curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
