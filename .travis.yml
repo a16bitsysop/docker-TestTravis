@@ -5,7 +5,7 @@ language: minimal
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash
 
-before_script:
+before_install:
   - VER=$(docker container run --rm alpine sh -c "apk update > /dev/null; apk info -s "$APK" | head -n1 | sed -r 's+$APK-(.*) install.*+\1+g';")
   - VER="$VER"-alpine"$(docker container run --rm alpine cat /etc/alpine-release)"
   - TAG="-t $IMAGE_NAME:$VER"
@@ -13,22 +13,26 @@ before_script:
       MY_VER="$(wget -q https://registry.hub.docker.com/v1/repositories/$IMAGE_NAME/tags -O - | sed -e 's+.*\"name\": \"++g' -e 's+\"}]++')"
       echo "Alpine Version $VER"
       echo "Docker Version $MY_VER"
+
+install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo apt autoremove -qq >/dev/null
+  - sudo apt autoremove -qq
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
   - sudo apt-get update -qq >/dev/null && sudo apt-get install -y -qq --no-install-recommends docker-ce-cli
-  - sudo apt install pass -qq >/dev/null
+  - sudo apt install pass -qq
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
   - chmod +x docker-credential-pass && mv docker-credential-pass ~/bin/
   - |
       echo -e "%echo Generating OpenPGP key\n%transient-key\n%no-protection\nKey-Type: default\nSubkey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis Builder user\nName-Email: travis@example.com\nExpire-Date: 1\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt && rm keygen.txt && gpg --check-trustdb
       pass init $(gpg --list-secret-keys | grep -A1 ^sec | tail -n1 | sed 's+^[[:space:]]*++')
-      mkdir ~/.docker && echo -e '{\n  "credsStore": "pass",\n  "experimental": "enabled"\n}' > ~/.docker/config.json
+      mkdir ~/.docker && echo -e '{\n"credsStore":"pass",\n"experimental":"enabled"\n}' > ~/.docker/config.json
+
+before_script:
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - cat ~/.docker/config.json
   - docker buildx create --use
+
 script:
   - docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 $TAG -t "$IMAGE_NAME" --push .
   - docker logout
