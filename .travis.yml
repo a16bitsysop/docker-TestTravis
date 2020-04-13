@@ -21,4 +21,4 @@ before_script:
   - cat ~/.docker/config.json
 
 script:
-  - docker-build.sh
+  - docker-build.sh "$TAG"
