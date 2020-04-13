@@ -14,6 +14,7 @@ before_script:
       echo "Alpine Version $VER"
       echo "Docker Version $MY_VER"
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo apt-get remove docker && sudo apt-get autoremove
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
   - sudo apt-get update && sudo apt-get upgrade docker-ce
   - sudo apt-get install pass
