@@ -16,7 +16,7 @@ before_script:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - sudo apt autoremove
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-  - sudo apt update && sudo apt upgrade docker-ce
+  - sudo apt-get update -qq >/dev/null && sudo apt-get install -y -qq --no-install-recommends docker-ce-cli
   - sudo apt install pass
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
   - chmod +x docker-credential-pass && mv docker-credential-pass ~/bin/
