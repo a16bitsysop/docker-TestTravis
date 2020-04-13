@@ -1,4 +1,4 @@
-import: a16bitsysop/travis-build-configs:docker.yml
+import: a16bitsysop/travis-build-configs:docker-apt.yml
 
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash
