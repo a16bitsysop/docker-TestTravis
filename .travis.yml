@@ -15,18 +15,16 @@ before_script:
       echo "Docker Version $MY_VER"
   - sudo apt-get install pass
   - curl -fsSL "https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/docker-credential-pass-v0.6.3-amd64.tar.gz" | tar -xvz
-  - chmod +x docker-credential-pass && mkdir bin && mv docker-credential-pass bin/
+  - chmod +x docker-credential-pass && mkdir ~/bin && mv docker-credential-pass ~/bin/
   - |
       echo -e "%echo Generating a basic OpenPGP key\n%transient-key\n%no-protection\nKey-Type: default\nSubkey-Type: default\nName-Real: Travis Builder\nName-Comment: Travis Builder user\nName-Email: travis@example.com\nExpire-Date: 1\n%commit\n%echo done" > keygen.txt
       gpg --batch --gen-key keygen.txt && gpg --check-trustdb
       pass init $(gpg --list-secret-keys | grep -A1 ^sec | tail -n1 | sed 's+^[[:space:]]*++')
-      ls -lah ~/ && mkdir ~/.docker
-      echo -e '{\n  "credsStore": "pass",\n  "experimental": "enabled"\n}' > ~/.docker/config.json
-      cat ~/.docker/config.json
+      mkdir ~/.docker && echo -e '{\n  "credsStore": "pass",\n  "experimental": "enabled"\n}' > ~/.docker/config.json
   - curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - cat ~/.docker/config.json && ls -lah ~/.docker
+  - cat ~/.docker/config.json
   - docker buildx create --use
 script:
   - docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 $TAG -t "$IMAGE_NAME" --push .
