@@ -4,20 +4,21 @@ env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash
 
 before_install:
-  - VER=$(docker container run --rm alpine sh -c "apk update > /dev/null; apk info -s "$APK" | head -n1 | sed -r 's+$APK-(.*) install.*+\1+g';")
-  - VER="$VER"-alpine"$(docker container run --rm alpine cat /etc/alpine-release)"
+  - VER=$(version.py -a $APK)"
+#  - VER=$(docker container run --rm alpine sh -c "apk update > /dev/null; apk info -s "$APK" | head -n1 | sed -r 's+$APK-(.*) install.*+\1+g';")
+  - VER="$VER"-alpine"$(version.py -b)"
   - |
-      MY_VER="$(wget -q https://registry.hub.docker.com/v1/repositories/$IMAGE_NAME/tags -O - | sed -e 's+.*\"name\": \"++g' -e 's+\"}]++')"
+      MY_VER="$(version.py -d $IMAGE_NAME)"
       echo "Alpine Version $VER"
       echo "Docker Version $MY_VER"
 
-install:
-  - git clone --depth 3 https://github.com/a16bitsysop/travis-build-configs.git && mv travis-build-configs/*.sh ~/bin/
-  - docker-pass.sh
+#install:
+#  - git clone --depth 3 https://github.com/a16bitsysop/travis-build-configs.git && mv travis-build-configs/*.sh ~/bin/
+#  - docker-pass.sh
 
-before_script:
-  - docker-prep.sh
-  - cat ~/.docker/config.json
+#before_script:
+#  - docker-prep.sh
+#  - cat ~/.docker/config.json
 
 script:
   - docker-build.sh "$VER"
