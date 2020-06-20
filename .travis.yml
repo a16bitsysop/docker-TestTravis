@@ -4,7 +4,7 @@ env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash
 
 before_install:
-  - git submodule update --init --recursive
+  - git submodule update
   - ls -la
   - ls -la ~/bin
   - VER=$(version.py -a $APK)
