@@ -4,8 +4,8 @@ env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash
 
 before_install:
-  - git submodule update
-  - ls -la
+  - cp travis-helpers/version.py ~/bin/
+  - ls -la ~/
   - ls -la ~/bin
   - VER=$(version.py -a $APK)
 #  - VER=$(docker container run --rm alpine sh -c "apk update > /dev/null; apk info -s "$APK" | head -n1 | sed -r 's+$APK-(.*) install.*+\1+g';")
