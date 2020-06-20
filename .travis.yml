@@ -5,10 +5,8 @@ env:
 
 before_install:
   - cp travis-helpers/version.py ~/bin/
-  - ls -la ~/
-  - ls -la ~/bin
+  - python3 -m pip3 install docker
   - VER=$(version.py -a $APK)
-#  - VER=$(docker container run --rm alpine sh -c "apk update > /dev/null; apk info -s "$APK" | head -n1 | sed -r 's+$APK-(.*) install.*+\1+g';")
   - VER=$VER"-alpine"$(version.py -b)
   - |
       MY_VER="$(version.py -d $IMAGE_NAME)"
