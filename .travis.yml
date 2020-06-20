@@ -5,7 +5,7 @@ env:
 
 before_install:
   - cp travis-helpers/version.py ~/bin/
-  - python3 -m pip3 install docker
+  - python3 -m pip install docker
   - VER=$(version.py -a $APK)
   - VER=$VER"-alpine"$(version.py -b)
   - |
