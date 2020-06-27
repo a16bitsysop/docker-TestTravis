@@ -17,4 +17,5 @@ fi
 #[ -n $TRAVIS ] && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 export DOCKER_CLI_EXPERIMENTAL=enabled
+docker buildx create --use
 docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 -t "$IMAGE_NAME" .
