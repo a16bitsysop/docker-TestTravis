@@ -9,7 +9,7 @@ then
 	mv buildx ~/.docker/cli-plugins/docker-buildx
 
 #	chmod a+x ~/.docker/cli-plugins/docker-buildx
-	sudo systemctl docker restart
+#	systemctl docker restart
 	docker run --rm --privileged multiarch/qemu-user-static:register --reset
 #	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 fi
@@ -17,4 +17,4 @@ fi
 #[ -n $TRAVIS ] && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 export DOCKER_CLI_EXPERIMENTAL=enabled
-docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 -t "$IMAGE_NAME" --push .
+docker buildx build --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 -t "$IMAGE_NAME" .
