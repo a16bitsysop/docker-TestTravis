@@ -1,14 +1,15 @@
 import: a16bitsysop/travis-build-configs:docker-apt.yml
 
 env:
-  - IMAGE_NAME=a16bitsysop/travistest APK=bash
+  - IMAGE_NAME=a16bitsysop/travistest APK=bash 
 
 before_install:
-  - VER=$(version.py -a $APK)
-  - VER=$VER"-alpine"$(version.py -b)
+  - APK_VER=$(version.py -a $APK)
+  - ALP_VER=$(version.py -b)
+  - TAG=$APK_VER"-alpine"$ALP_VER
   - |
       MY_VER="$(version.py -d $IMAGE_NAME)"
-      echo "Alpine Version $VER"
+      echo "Alpine Version $TAG"
       echo "Docker Version $MY_VER"
 
 #install:
@@ -20,4 +21,4 @@ before_install:
 #  - cat ~/.docker/config.json
 
 script:
-  - docker-build.sh "$VER"
+  - docker-build.sh "$TAG" "$ALP_VER" "$APK_VER"
