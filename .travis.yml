@@ -13,4 +13,5 @@ before_install:
       echo "Docker Version $MY_VER"
 
 script:
+  - docker-test.sh
   - docker-build.sh "$TAG" "$ALP_VER" "$APK_VER"
