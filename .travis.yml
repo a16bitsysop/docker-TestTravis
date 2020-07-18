@@ -1,4 +1,4 @@
-import: a16bitsysop/travis-build-configs:docker-apt.yml
+import: a16bitsysop/travis-build-configs:docker-build-test.yml
 
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash 
@@ -11,14 +11,6 @@ before_install:
       MY_VER="$(version.py -d $IMAGE_NAME)"
       echo "Alpine Version $TAG"
       echo "Docker Version $MY_VER"
-
-#install:
-#  - git clone --depth 3 https://github.com/a16bitsysop/travis-build-configs.git && mv travis-build-configs/*.sh ~/bin/
-#  - docker-pass.sh
-
-#before_script:
-#  - docker-prep.sh
-#  - cat ~/.docker/config.json
 
 script:
   - docker-build.sh "$TAG" "$ALP_VER" "$APK_VER"
