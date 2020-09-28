@@ -1,4 +1,5 @@
 import: a16bitsysop/travis-build-configs:docker-apt.yml
+sudo: required
 
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash 
