@@ -1,6 +1,6 @@
 FROM alpine:edge as builder
 
-RUN apk add --update-cache alpine-conf alpine-sdk sudo 
+RUN apk add --update-cache alpine-conf alpine-sdk sudo \
 && apk upgrade -a \
 && setup-apkcache /var/cache/apk
 RUN adduser -D builduser \
