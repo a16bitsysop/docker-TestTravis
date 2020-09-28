@@ -13,6 +13,6 @@ before_install:
       echo "Docker Version $MY_VER"
 
 script:
-  - build-apk-travis.sh
+  - ./build-apk-travis.sh
   - docker-test.sh || travis_terminate 1
   - docker-build.sh "$TAG" "$ALP_VER" "$APK_VER"
