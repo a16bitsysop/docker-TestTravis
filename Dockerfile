@@ -1,7 +1,8 @@
 FROM alpine:edge as builder
 
 RUN apk add --update-cache alpine-conf alpine-sdk sudo \
-&& apk upgrade -a
+&& apk upgrade -a \
+&& chmod u+s /usr/bin/sudo
 RUN adduser -D builduser \
     && addgroup builduser abuild \
     && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
