@@ -18,7 +18,7 @@ USER builduser
 
 RUN abuild-keygen -a -i -n \
 && sudo install -d -o builduser -g builduser "$HOME"/.abuild/ \
-&& chown builduser:builduser aport
+&& chown builduser:builduser aport \
 && cd aport \
 && abuild checksum \
 && abuild -r
