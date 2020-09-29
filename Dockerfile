@@ -11,14 +11,11 @@ RUN adduser -D builduser \
     && addgroup builduser abuild \
     && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 WORKDIR /home/builduser
-RUN pull-patch.sh main/postfix
+RUN pull-patch.sh main/postfix \
+&& chown builduser:builduser aport 
 
 USER builduser
-
-
 RUN abuild-keygen -a -i -n \
-&& sudo install -d -o builduser -g builduser "$HOME"/.abuild/ \
-&& chown builduser:builduser aport \
 && cd aport \
 && abuild checksum \
 && abuild -r
