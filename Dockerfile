@@ -18,5 +18,6 @@ USER builduser
 
 RUN abuild-keygen -a -i -n \
 && sudo install -d -o builduser -g builduser "$HOME"/.abuild/ \
+&& cd aport \
 && abuild checksum \
 && abuild -r
