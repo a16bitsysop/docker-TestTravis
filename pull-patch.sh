@@ -26,7 +26,7 @@ echo "Preparing to build $tobuild"
 [ -f ../APKBUILD.patch ] && patch -p1 -i ../APKBUILD.patch
 [ -f ../prebuild.sh ] && sh ../prebuild.sh
 [ -d ../newfiles ] && cp ../newfiles/* .
-abuild checksum
+#abuild checksum
 
-echo "Building $tobuild"
-abuild -r
+#echo "Building $tobuild"
+#abuild -r
