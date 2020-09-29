@@ -27,7 +27,7 @@ echo "Preparing to build $tobuild"
 [ -f ../prebuild.sh ] && sh ../prebuild.sh
 [ -d ../newfiles ] && cp ../newfiles/* .
 source ./APKBUILD
-apk add "$depends" "$makedepends" "$checkdepends"
+apk add $(echo "$depends" "$makedepends" "$checkdepends" | xargs)
 #abuild checksum
 
 #echo "Building $tobuild"
