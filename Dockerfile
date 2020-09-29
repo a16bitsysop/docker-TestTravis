@@ -11,9 +11,7 @@ RUN adduser -D builduser \
     && addgroup builduser abuild \
     && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 WORKDIR /home/builduser
-RUN pull-patch.sh main/postfix \
-&& source ./APKBUILD \
-&& apk add "$depends" "$makedepends" "$checkdepends"
+RUN pull-patch.sh main/postfix
 
 USER builduser
 
