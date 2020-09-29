@@ -1,6 +1,25 @@
-import: a16bitsysop/travis-build-configs:docker-apt.yml
-sudo: required
+language: ruby
 
+services:
+  - docker
+
+before_install:
+  - |
+      mkdir -p ~/.docker/cli-plugins
+      echo '{"experimental":"enabled"}' >> ~/.docker/config.json
+  - BUILDX=0.4.2
+  - wget -qO ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v"$BUILDX"/buildx-v"$BUILDX".linux-amd64
+  - wget -qO ~/bin/scan.sh https://raw.githubusercontent.com/lukebond/microscanner-wrapper/master/scan.sh
+  - chmod a+x ~/bin/scan.sh ~/.docker/cli-plugins/docker-buildx
+  - sudo service docker restart
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+  - docker buildx create --use
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - |
+      if [ -d "travis-helpers" ]; then
+        find travis-helpers -maxdepth 1 -executable -type f -exec cp '{}' ~/bin/ \;
+        python3 -m pip install docker natsort bs4
+      fi
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash 
 
@@ -14,5 +33,4 @@ before_install:
       echo "Docker Version $MY_VER"
 
 script:
-  - docker-test.sh || travis_terminate 1
-  - docker-build.sh "$TAG" "$ALP_VER" "$APK_VER"
+  - docker buildx build --platform linux/arm64 .
