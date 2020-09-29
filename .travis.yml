@@ -23,14 +23,5 @@ before_install:
 env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash 
 
-before_install:
-  - APK_VER=$(version.py -a $APK)
-  - ALP_VER=$(version.py -b)
-  - TAG=$APK_VER"-alpine"$ALP_VER
-  - |
-      MY_VER="$(version.py -d $IMAGE_NAME)"
-      echo "Alpine Version $TAG"
-      echo "Docker Version $MY_VER"
-
 script:
   - docker buildx build --platform linux/arm64 .
