@@ -26,4 +26,5 @@ env:
   - IMAGE_NAME=a16bitsysop/travistest APK=bash 
 
 script:
-  - docker buildx build --platform linux/arm64 .
+  - docker-build-ind.sh
+  - docker-build.sh
